@@ -1,73 +1,80 @@
-# Welcome to your Lovable project
+# 🌐 SkillSync: Smart Team & Project Buddy Finder
 
-## Project info
+SkillSync is an intelligent platform designed to revolutionize how students form project teams and find mentors. Instead of random group formation, SkillSync helps students connect based on **skills, interests, and goals**, creating stronger collaborations and better academic outcomes.
 
-**URL**: https://lovable.dev/projects/ca440327-225e-4e51-8780-fbf497ceea47
+---
 
-## How can I edit this code?
+## 🚀 Overview
 
-There are several ways of editing your application.
+In academic environments, especially in engineering and design programs, teamwork is essential — yet most student teams are formed by chance rather than capability.  
+SkillSync solves this problem by offering a **centralized digital platform** for:
 
-**Use Lovable**
+- Finding teammates with complementary skills  
+- Connecting with mentors (faculty/seniors) for guidance  
+- Managing projects collaboratively in a single dashboard  
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/ca440327-225e-4e51-8780-fbf497ceea47) and start prompting.
+The goal is to make collaboration **smart, data-driven, and impactful**.
 
-Changes made via Lovable will be committed automatically to this repo.
+---
 
-**Use your preferred IDE**
+## 🎯 Key Features
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### 👤 Student Profiles
+Each student can create a **professional digital profile** similar to LinkedIn:
+- Personal information, education, and achievements  
+- Technical skills and areas of expertise  
+- Links to coding profiles (GitHub, LeetCode, etc.)  
+- Project portfolios and interests  
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+### 🤝 Smart Team Formation
+- Discover and filter teammates by **skills, academic year, or domain interest**  
+- Build balanced teams for college projects and hackathons  
+- Send collaboration requests and form teams dynamically  
 
-Follow these steps:
+### 🧑‍🏫 Mentor Connect
+- Dedicated section for **faculty and senior mentors**  
+- Students can browse mentor profiles and send requests for project guidance  
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+### 📂 Team Dashboard
+- Private dashboard for each team  
+- Real-time communication (chat), task assignment, and document sharing  
+- Tracks team progress and helps manage deliverables efficiently  
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+### 🧱 Scalable Architecture
+- Designed for future AI integration to suggest best-fit teammates automatically  
+- Secure login and profile-based data management  
 
-# Step 3: Install the necessary dependencies.
-npm i
+---
+## 👩‍💻 About the Project Team
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
+**Mentor:**  
+**Ms. Sonali Gupta**  
+Assistant Professor, Department of CSE, Graphic Era Deemed University, Dehradun  
+> 🏅 Gold Medallist in M.Tech (CSE) with over 5 years of research & teaching experience.  
+> Expertise: *Machine Learning, Internet of Vehicles, and Data Analytics*  
+> 15+ Research Papers and 2 Patents.
 
-**Edit a file directly in GitHub**
+**Project Team Members:**
+- Devansh Rawat  
+- Anuj Kumar  
+- Vedant Devrani  
+- Shalini Uniyal  
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+---
 
-**Use GitHub Codespaces**
+## 💡 Vision
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+SkillSync isn’t just a project — it’s a **movement toward smarter collaboration** in education.  
+By helping students find the right people to work with, SkillSync enables more innovation, stronger projects, and a truly connected academic community.
 
-## What technologies are used for this project?
+---
 
-This project is built with:
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
 
-## How can I deploy this project?
+---
 
-Simply open [Lovable](https://lovable.dev/projects/ca440327-225e-4e51-8780-fbf497ceea47) and click on Share -> Publish.
+## 🏁 How to Run (For Developers)
 
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+1. Clone the repository  
+   ```bash
+   git clone https://github.com/your-username/SkillSync.git
