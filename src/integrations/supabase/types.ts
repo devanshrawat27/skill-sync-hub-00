@@ -14,16 +14,274 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      connections: {
+        Row: {
+          created_at: string
+          id: string
+          receiver_id: string
+          sender_id: string
+          status: Database["public"]["Enums"]["connection_status"]
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          receiver_id: string
+          sender_id: string
+          status?: Database["public"]["Enums"]["connection_status"]
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          receiver_id?: string
+          sender_id?: string
+          status?: Database["public"]["Enums"]["connection_status"]
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      messages: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          is_read: boolean | null
+          receiver_id: string
+          sender_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          is_read?: boolean | null
+          receiver_id: string
+          sender_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          is_read?: boolean | null
+          receiver_id?: string
+          sender_id?: string
+        }
+        Relationships: []
+      }
+      notifications: {
+        Row: {
+          created_at: string
+          id: string
+          is_read: boolean | null
+          link: string | null
+          message: string | null
+          title: string
+          type: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_read?: boolean | null
+          link?: string | null
+          message?: string | null
+          title: string
+          type: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_read?: boolean | null
+          link?: string | null
+          message?: string | null
+          title?: string
+          type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          achievements: string[] | null
+          availability: boolean | null
+          bio: string | null
+          codeforces_url: string | null
+          created_at: string
+          department: string | null
+          domain: string | null
+          email: string
+          github_url: string | null
+          id: string
+          interests: string[] | null
+          leetcode_url: string | null
+          linkedin_url: string | null
+          name: string
+          portfolio_url: string | null
+          profile_photo: string | null
+          resume_url: string | null
+          skills: string[] | null
+          updated_at: string
+          user_id: string
+          year: number | null
+        }
+        Insert: {
+          achievements?: string[] | null
+          availability?: boolean | null
+          bio?: string | null
+          codeforces_url?: string | null
+          created_at?: string
+          department?: string | null
+          domain?: string | null
+          email: string
+          github_url?: string | null
+          id?: string
+          interests?: string[] | null
+          leetcode_url?: string | null
+          linkedin_url?: string | null
+          name: string
+          portfolio_url?: string | null
+          profile_photo?: string | null
+          resume_url?: string | null
+          skills?: string[] | null
+          updated_at?: string
+          user_id: string
+          year?: number | null
+        }
+        Update: {
+          achievements?: string[] | null
+          availability?: boolean | null
+          bio?: string | null
+          codeforces_url?: string | null
+          created_at?: string
+          department?: string | null
+          domain?: string | null
+          email?: string
+          github_url?: string | null
+          id?: string
+          interests?: string[] | null
+          leetcode_url?: string | null
+          linkedin_url?: string | null
+          name?: string
+          portfolio_url?: string | null
+          profile_photo?: string | null
+          resume_url?: string | null
+          skills?: string[] | null
+          updated_at?: string
+          user_id?: string
+          year?: number | null
+        }
+        Relationships: []
+      }
+      project_members: {
+        Row: {
+          created_at: string
+          id: string
+          project_id: string
+          status: Database["public"]["Enums"]["project_request_status"]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          project_id: string
+          status?: Database["public"]["Enums"]["project_request_status"]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          project_id?: string
+          status?: Database["public"]["Enums"]["project_request_status"]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "project_members_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      projects: {
+        Row: {
+          created_at: string
+          creator_id: string
+          description: string | null
+          domain: string | null
+          id: string
+          is_public: boolean | null
+          max_team_size: number | null
+          required_skills: string[] | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          creator_id: string
+          description?: string | null
+          domain?: string | null
+          id?: string
+          is_public?: boolean | null
+          max_team_size?: number | null
+          required_skills?: string[] | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          creator_id?: string
+          description?: string | null
+          domain?: string | null
+          id?: string
+          is_public?: boolean | null
+          max_team_size?: number | null
+          required_skills?: string[] | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "student" | "mentor" | "admin"
+      connection_status: "pending" | "accepted" | "rejected"
+      project_request_status: "pending" | "accepted" | "rejected"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +408,10 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["student", "mentor", "admin"],
+      connection_status: ["pending", "accepted", "rejected"],
+      project_request_status: ["pending", "accepted", "rejected"],
+    },
   },
 } as const
