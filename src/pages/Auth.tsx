@@ -1,13 +1,16 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Users, Sparkles } from "lucide-react";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 
 const Auth = () => {
+  const navigate = useNavigate();
   const [isLogin, setIsLogin] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -15,7 +18,25 @@ const Auth = () => {
     name: ""
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  useEffect(() => {
+    // Check if user is already logged in
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session) {
+        navigate("/");
+      }
+    });
+
+    // Listen for auth state changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (session) {
+        navigate("/");
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, [navigate]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!isLogin && formData.password !== formData.confirmPassword) {
@@ -23,8 +44,39 @@ const Auth = () => {
       return;
     }
 
-    // This will be connected to Supabase auth later
-    toast.success(isLogin ? "Welcome back!" : "Account created successfully!");
+    setLoading(true);
+
+    try {
+      if (isLogin) {
+        // Sign in
+        const { error } = await supabase.auth.signInWithPassword({
+          email: formData.email,
+          password: formData.password,
+        });
+
+        if (error) throw error;
+        toast.success("Welcome back!");
+      } else {
+        // Sign up
+        const { error } = await supabase.auth.signUp({
+          email: formData.email,
+          password: formData.password,
+          options: {
+            emailRedirectTo: `${window.location.origin}/`,
+            data: {
+              name: formData.name,
+            }
+          }
+        });
+
+        if (error) throw error;
+        toast.success("Account created successfully!");
+      }
+    } catch (error: any) {
+      toast.error(error.message || "An error occurred");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -131,10 +183,11 @@ const Auth = () => {
 
             <Button 
               type="submit"
+              disabled={loading}
               className="w-full bg-gradient-to-r from-primary to-accent text-white font-semibold glow-hover"
             >
               <Sparkles className="w-4 h-4 mr-2" />
-              {isLogin ? "Sign In" : "Create Account"}
+              {loading ? "Please wait..." : isLogin ? "Sign In" : "Create Account"}
             </Button>
           </form>
 
