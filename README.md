@@ -73,8 +73,4 @@ By helping students find the right people to work with, SkillSync enables more i
 
 ---
 
-## 🏁 How to Run (For Developers)
 
-1. Clone the repository  
-   ```bash
-   git clone https://github.com/your-username/SkillSync.git
