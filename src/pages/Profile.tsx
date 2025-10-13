@@ -8,13 +8,16 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { Save } from "lucide-react";
+import { Save, Users } from "lucide-react";
+import SkillsInput from "@/components/SkillsInput";
 
 const Profile = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [connectionsCount, setConnectionsCount] = useState(0);
   const [profile, setProfile] = useState({
     name: "",
     email: "",
@@ -27,8 +30,8 @@ const Profile = () => {
     leetcode_url: "",
     codeforces_url: "",
     portfolio_url: "",
-    skills: "",
-    interests: "",
+    skills: [] as string[],
+    interests: [] as string[],
   });
 
   useEffect(() => {
@@ -55,6 +58,15 @@ const Profile = () => {
       return;
     }
 
+    // Load connections count
+    const { count } = await supabase
+      .from("connections")
+      .select("*", { count: 'exact', head: true })
+      .eq("status", "accepted")
+      .or(`sender_id.eq.${session.user.id},receiver_id.eq.${session.user.id}`);
+
+    setConnectionsCount(count || 0);
+
     if (data) {
       setProfile({
         name: data.name || "",
@@ -68,8 +80,8 @@ const Profile = () => {
         leetcode_url: data.leetcode_url || "",
         codeforces_url: data.codeforces_url || "",
         portfolio_url: data.portfolio_url || "",
-        skills: data.skills?.join(", ") || "",
-        interests: data.interests?.join(", ") || "",
+        skills: data.skills || [],
+        interests: data.interests || [],
       });
     }
     
@@ -85,9 +97,6 @@ const Profile = () => {
       return;
     }
 
-    const skillsArray = profile.skills.split(",").map(s => s.trim()).filter(s => s);
-    const interestsArray = profile.interests.split(",").map(s => s.trim()).filter(s => s);
-
     const { error } = await supabase
       .from("profiles")
       .update({
@@ -101,8 +110,8 @@ const Profile = () => {
         leetcode_url: profile.leetcode_url,
         codeforces_url: profile.codeforces_url,
         portfolio_url: profile.portfolio_url,
-        skills: skillsArray,
-        interests: interestsArray,
+        skills: profile.skills,
+        interests: profile.interests,
       })
       .eq("user_id", session.user.id);
 
@@ -123,6 +132,14 @@ const Profile = () => {
     }));
   };
 
+  const handleSkillsChange = (skills: string[]) => {
+    setProfile(prev => ({ ...prev, skills }));
+  };
+
+  const handleInterestsChange = (interests: string[]) => {
+    setProfile(prev => ({ ...prev, interests }));
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -140,6 +157,12 @@ const Profile = () => {
           <div className="mb-8">
             <h1 className="text-4xl font-bold mb-2">Edit Profile</h1>
             <p className="text-muted-foreground">Update your information to help teammates find you</p>
+            <div className="mt-4 flex items-center gap-2">
+              <Badge variant="secondary" className="flex items-center gap-1">
+                <Users className="w-3 h-3" />
+                {connectionsCount} Connections
+              </Badge>
+            </div>
           </div>
 
           <Card className="glass-card p-8">
@@ -222,27 +245,25 @@ const Profile = () => {
               </div>
 
               <div>
-                <Label htmlFor="skills">Skills (comma-separated)</Label>
-                <Input
-                  id="skills"
-                  name="skills"
-                  value={profile.skills}
-                  onChange={handleChange}
-                  placeholder="React, Python, Machine Learning"
-                  className="mt-2"
-                />
+                <Label htmlFor="skills">Skills</Label>
+                <div className="mt-2">
+                  <SkillsInput 
+                    skills={profile.skills}
+                    onChange={handleSkillsChange}
+                    placeholder="Add a skill (e.g., React, Python)"
+                  />
+                </div>
               </div>
 
               <div>
-                <Label htmlFor="interests">Interests (comma-separated)</Label>
-                <Input
-                  id="interests"
-                  name="interests"
-                  value={profile.interests}
-                  onChange={handleChange}
-                  placeholder="Web Dev, Data Science, Robotics"
-                  className="mt-2"
-                />
+                <Label htmlFor="interests">Interests</Label>
+                <div className="mt-2">
+                  <SkillsInput 
+                    skills={profile.interests}
+                    onChange={handleInterestsChange}
+                    placeholder="Add an interest (e.g., Web Development)"
+                  />
+                </div>
               </div>
 
               <div className="space-y-4">

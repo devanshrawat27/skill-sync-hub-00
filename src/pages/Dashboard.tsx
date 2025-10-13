@@ -12,6 +12,12 @@ const Dashboard = () => {
   const navigate = useNavigate();
   const [profile, setProfile] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [stats, setStats] = useState({
+    connections: 0,
+    projects: 0,
+    teamMembers: 0,
+    notifications: 0,
+  });
 
   useEffect(() => {
     checkAuth();
@@ -39,6 +45,34 @@ const Dashboard = () => {
     }
 
     setProfile(data);
+
+    // Load stats
+    const [
+      { count: connectionsCount },
+      { count: projectsCount },
+      { count: teamMembersCount },
+      { count: notificationsCount }
+    ] = await Promise.all([
+      supabase.from("connections").select("*", { count: 'exact', head: true })
+        .eq("status", "accepted")
+        .or(`sender_id.eq.${session.user.id},receiver_id.eq.${session.user.id}`),
+      supabase.from("projects").select("*", { count: 'exact', head: true })
+        .eq("creator_id", session.user.id),
+      supabase.from("project_members").select("*", { count: 'exact', head: true })
+        .eq("user_id", session.user.id)
+        .eq("status", "accepted"),
+      supabase.from("notifications").select("*", { count: 'exact', head: true })
+        .eq("user_id", session.user.id)
+        .eq("is_read", false)
+    ]);
+
+    setStats({
+      connections: connectionsCount || 0,
+      projects: projectsCount || 0,
+      teamMembers: teamMembersCount || 0,
+      notifications: notificationsCount || 0,
+    });
+
     setLoading(false);
   };
 
@@ -68,7 +102,7 @@ const Dashboard = () => {
                   <User className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <div className="text-2xl font-bold">0</div>
+                  <div className="text-2xl font-bold">{stats.connections}</div>
                   <div className="text-sm text-muted-foreground">Connections</div>
                 </div>
               </div>
@@ -80,7 +114,7 @@ const Dashboard = () => {
                   <Briefcase className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <div className="text-2xl font-bold">0</div>
+                  <div className="text-2xl font-bold">{stats.projects}</div>
                   <div className="text-sm text-muted-foreground">Projects</div>
                 </div>
               </div>
@@ -92,7 +126,7 @@ const Dashboard = () => {
                   <Users className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <div className="text-2xl font-bold">0</div>
+                  <div className="text-2xl font-bold">{stats.teamMembers}</div>
                   <div className="text-sm text-muted-foreground">Team Members</div>
                 </div>
               </div>
@@ -104,7 +138,7 @@ const Dashboard = () => {
                   <Bell className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <div className="text-2xl font-bold">0</div>
+                  <div className="text-2xl font-bold">{stats.notifications}</div>
                   <div className="text-sm text-muted-foreground">Notifications</div>
                 </div>
               </div>

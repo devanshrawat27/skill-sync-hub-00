@@ -7,7 +7,8 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { User, Search, Github, Linkedin, Code } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { User, Search, Github, Linkedin, Code, Check, Clock, UserPlus } from "lucide-react";
 import { toast } from "sonner";
 
 const FindTeammates = () => {
@@ -17,24 +18,39 @@ const FindTeammates = () => {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentUserId, setCurrentUserId] = useState<string>("");
+  const [departmentFilter, setDepartmentFilter] = useState<string>("all");
+  const [domainFilter, setDomainFilter] = useState<string>("all");
+  const [connectionStatuses, setConnectionStatuses] = useState<Record<string, string>>({});
 
   useEffect(() => {
     checkAuthAndLoadProfiles();
   }, []);
 
   useEffect(() => {
+    let filtered = profiles;
+
+    // Apply search filter
     if (searchTerm) {
-      const filtered = profiles.filter(profile => 
+      filtered = filtered.filter(profile => 
         profile.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         profile.department?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         profile.domain?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         profile.skills?.some((skill: string) => skill.toLowerCase().includes(searchTerm.toLowerCase()))
       );
-      setFilteredProfiles(filtered);
-    } else {
-      setFilteredProfiles(profiles);
     }
-  }, [searchTerm, profiles]);
+
+    // Apply department filter
+    if (departmentFilter !== "all") {
+      filtered = filtered.filter(profile => profile.department === departmentFilter);
+    }
+
+    // Apply domain filter
+    if (domainFilter !== "all") {
+      filtered = filtered.filter(profile => profile.domain === domainFilter);
+    }
+
+    setFilteredProfiles(filtered);
+  }, [searchTerm, profiles, departmentFilter, domainFilter]);
 
   const checkAuthAndLoadProfiles = async () => {
     const { data: { session } } = await supabase.auth.getSession();
@@ -58,12 +74,37 @@ const FindTeammates = () => {
       return;
     }
 
+    // Fetch connection statuses
+    const { data: connections } = await supabase
+      .from("connections")
+      .select("receiver_id, sender_id, status")
+      .or(`sender_id.eq.${session.user.id},receiver_id.eq.${session.user.id}`);
+
+    const statuses: Record<string, string> = {};
+    connections?.forEach(conn => {
+      const otherUserId = conn.sender_id === session.user.id ? conn.receiver_id : conn.sender_id;
+      statuses[otherUserId] = conn.status;
+    });
+    setConnectionStatuses(statuses);
+
     setProfiles(data || []);
     setFilteredProfiles(data || []);
     setLoading(false);
   };
 
   const handleConnect = async (userId: string) => {
+    // Check if connection already exists
+    const { data: existing } = await supabase
+      .from("connections")
+      .select("*")
+      .or(`and(sender_id.eq.${currentUserId},receiver_id.eq.${userId}),and(sender_id.eq.${userId},receiver_id.eq.${currentUserId})`)
+      .single();
+
+    if (existing) {
+      toast.error("Connection request already exists");
+      return;
+    }
+
     const { error } = await supabase
       .from("connections")
       .insert({
@@ -77,8 +118,12 @@ const FindTeammates = () => {
       return;
     }
 
+    setConnectionStatuses(prev => ({ ...prev, [userId]: "pending" }));
     toast.success("Connection request sent!");
   };
+
+  const departments = Array.from(new Set(profiles.map(p => p.department).filter(Boolean)));
+  const domains = Array.from(new Set(profiles.map(p => p.domain).filter(Boolean)));
 
   if (loading) {
     return (
@@ -99,7 +144,7 @@ const FindTeammates = () => {
             <p className="text-muted-foreground">Connect with students who share your interests and skills</p>
           </div>
 
-          <div className="mb-8">
+          <div className="mb-8 space-y-4">
             <div className="relative max-w-md">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5" />
               <Input
@@ -109,6 +154,32 @@ const FindTeammates = () => {
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="pl-10"
               />
+            </div>
+
+            <div className="flex gap-4">
+              <Select value={departmentFilter} onValueChange={setDepartmentFilter}>
+                <SelectTrigger className="w-[200px]">
+                  <SelectValue placeholder="Filter by department" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Departments</SelectItem>
+                  {departments.map(dept => (
+                    <SelectItem key={dept} value={dept}>{dept}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+
+              <Select value={domainFilter} onValueChange={setDomainFilter}>
+                <SelectTrigger className="w-[200px]">
+                  <SelectValue placeholder="Filter by domain" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Domains</SelectItem>
+                  {domains.map(domain => (
+                    <SelectItem key={domain} value={domain}>{domain}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
           </div>
 
@@ -184,13 +255,33 @@ const FindTeammates = () => {
                     )}
                   </div>
 
-                  <Button 
-                    onClick={() => handleConnect(profile.user_id)}
-                    className="w-full bg-gradient-to-r from-primary to-accent text-white"
-                  >
-                    <User className="w-4 h-4 mr-2" />
-                    Connect
-                  </Button>
+                  {connectionStatuses[profile.user_id] === "accepted" ? (
+                    <Button 
+                      disabled
+                      variant="outline"
+                      className="w-full"
+                    >
+                      <Check className="w-4 h-4 mr-2" />
+                      Connected
+                    </Button>
+                  ) : connectionStatuses[profile.user_id] === "pending" ? (
+                    <Button 
+                      disabled
+                      variant="outline"
+                      className="w-full"
+                    >
+                      <Clock className="w-4 h-4 mr-2" />
+                      Pending
+                    </Button>
+                  ) : (
+                    <Button 
+                      onClick={() => handleConnect(profile.user_id)}
+                      className="w-full bg-gradient-to-r from-primary to-accent text-white"
+                    >
+                      <UserPlus className="w-4 h-4 mr-2" />
+                      Connect
+                    </Button>
+                  )}
                 </Card>
               ))
             )}

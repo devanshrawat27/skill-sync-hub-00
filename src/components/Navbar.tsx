@@ -5,6 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useEffect, useState } from "react";
 import { User as SupabaseUser } from "@supabase/supabase-js";
 import { toast } from "sonner";
+import Notifications from "./Notifications";
 
 const Navbar = () => {
   const [user, setUser] = useState<SupabaseUser | null>(null);
@@ -55,6 +56,9 @@ const Navbar = () => {
                 <Link to="/find-teammates" className="text-foreground/80 hover:text-primary transition-colors font-medium">
                   Find Teammates
                 </Link>
+                <Link to="/connections" className="text-foreground/80 hover:text-primary transition-colors font-medium">
+                  Connections
+                </Link>
               </>
             )}
             <Link to="/features" className="text-foreground/80 hover:text-primary transition-colors font-medium">
@@ -72,6 +76,7 @@ const Navbar = () => {
           <div className="flex items-center gap-3">
             {user ? (
               <>
+                <Notifications />
                 <Link to="/profile">
                   <Button variant="ghost" className="font-medium">
                     <User className="w-4 h-4 mr-2" />
