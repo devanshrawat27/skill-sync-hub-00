@@ -39,22 +39,7 @@ const Index = () => {
                 </Link>
               </div>
               
-              {/* Stats */}
-              <div className="grid grid-cols-3 gap-6 mt-12">
-                <div>
-                  <div className="text-3xl font-bold gradient-text">500+</div>
-                  <div className="text-sm text-muted-foreground">Active Students</div>
-                </div>
-                <div>
-                  <div className="text-3xl font-bold gradient-text">100+</div>
-                  <div className="text-sm text-muted-foreground">Projects</div>
-                </div>
-                <div>
-                  <div className="text-3xl font-bold gradient-text">50+</div>
-                  <div className="text-sm text-muted-foreground">Mentors</div>
-                </div>
-              </div>
-            </div>
+            
             
             <div className="relative animate-fade-in">
               <div className="absolute inset-0 bg-gradient-to-tr from-primary/20 to-accent/20 rounded-3xl blur-3xl"></div>
