@@ -136,10 +136,10 @@ const Contact = () => {
                       For general inquiries and support
                     </p>
                     <a 
-                      href="mailto:contact@skillsync.com" 
+                      href="mailto:devanshdevr@gmail.com"
                       className="text-primary hover:underline font-medium"
                     >
-                      contact@skillsync.com
+                      devanshdevr@gmail.com, anujk90582@gmail.com, vedantdevrani177@gmail.com, shaliniuniyal924@gmail.com
                     </a>
                   </div>
                 </div>
@@ -156,24 +156,12 @@ const Contact = () => {
                       Help us improve SkillSync
                     </p>
                     <a 
-                      href="mailto:feedback@skillsync.com" 
+                      href="mailto:devanshdevr@gmail.com"
                       className="text-primary hover:underline font-medium"
                     >
-                      feedback@skillsync.com
+                      devanshdevr@gmail.com, anujk90582@gmail.com, vedantdevrani177@gmail.com, shaliniuniyal924@gmail.com
                     </a>
                   </div>
-                </div>
-              </Card>
-
-              <Card className="glass-card p-8 bg-gradient-to-br from-primary/10 to-accent/10">
-                <h3 className="text-xl font-semibold mb-3">Office Hours</h3>
-                <p className="text-muted-foreground mb-2">
-                  Our team is available to help:
-                </p>
-                <div className="space-y-1 text-foreground/90">
-                  <p>Monday - Friday: 9:00 AM - 6:00 PM</p>
-                  <p>Saturday: 10:00 AM - 4:00 PM</p>
-                  <p>Sunday: Closed</p>
                 </div>
               </Card>
             </div>
