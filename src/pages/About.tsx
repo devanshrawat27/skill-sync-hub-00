@@ -7,31 +7,27 @@ const About = () => {
   const teamMembers = [
     {
       name: "Devansh Rawat",
-      role: "Full Stack Developer",
-      bio: "Passionate about building scalable web applications",
       github: "https://github.com/devanshrawat",
-      linkedin: "https://linkedin.com/in/devanshrawat"
+      linkedin: "https://linkedin.com/in/devanshrawat",
+      image: "/src/pages/Devansh Rawat.jpg"
     },
     {
       name: "Anuj Kumar",
-      role: "Backend Developer",
-      bio: "Expert in API design and database optimization",
       github: "https://github.com/anujkumar",
-      linkedin: "https://linkedin.com/in/anujkumar"
+      linkedin: "https://linkedin.com/in/anujkumar",
+      image: "/src/pages/Anuj Kumar.jpg"
     },
     {
       name: "Vedant Devrani",
-      role: "Frontend Developer",
-      bio: "Creating beautiful and intuitive user experiences",
       github: "https://github.com/vedantdevrani",
-      linkedin: "https://linkedin.com/in/vedantdevrani"
+      linkedin: "https://linkedin.com/in/vedantdevrani",
+      image: "/src/Vedant Devrani.jpg"
     },
     {
       name: "Shalini Uniyal",
-      role: "UI/UX Designer",
-      bio: "Designing meaningful interactions and visuals",
       github: "https://github.com/shaliniuniyal",
-      linkedin: "https://linkedin.com/in/shaliniuniyal"
+      linkedin: "https://linkedin.com/in/shaliniuniyal",
+      image: "/src/pages/Shalini Uniyal.jpg"
     }
   ];
 
@@ -63,16 +59,18 @@ const About = () => {
             <h2 className="text-4xl font-bold text-center mb-12">Our Mentor</h2>
             <Card className="glass-card max-w-2xl mx-auto p-8 glow-hover">
               <div className="flex flex-col md:flex-row gap-6 items-center">
-                <div className="w-32 h-32 rounded-2xl bg-gradient-to-br from-primary via-accent to-secondary flex items-center justify-center text-white text-4xl font-bold flex-shrink-0">
-                  SG
+                <div className="w-32 h-32 rounded-2xl overflow-hidden flex-shrink-0">
+                  <img 
+                    src="/src/pages/Ms. Sonali Gupta.webp" 
+                    alt="Ms. Sonali Gupta"
+                    className="w-full h-full object-cover"
+                  />
                 </div>
                 <div className="text-center md:text-left">
                   <h3 className="text-2xl font-bold mb-2">Ms. Sonali Gupta</h3>
                   <p className="text-lg text-primary font-semibold mb-3">Project Mentor</p>
                   <p className="text-muted-foreground leading-relaxed">
-                    With over 10 years of experience in software development and education, 
-                    Ms. Gupta has been instrumental in guiding our team through the development process 
-                    and helping us understand the real needs of student collaboration.
+                    Assistant Professor. A gold medallist in M.Tech (CSE) from Graphic Era Deemed University, Dehradun, Ms. Sonali is pursuing Ph.D in CSE from Graphic Era Deemed University, Dehradun. Her research and teaching experience of over 5 years involves studies on Machine Learning and Internet of Vehicles. She has more than 15 research papers and 2 patents to her credit.
                   </p>
                 </div>
               </div>
@@ -88,14 +86,14 @@ const About = () => {
                   key={index} 
                   className="glass-card p-6 group hover:scale-105 transition-all duration-300"
                 >
-                  <div className="w-24 h-24 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-primary via-accent to-secondary flex items-center justify-center text-white text-3xl font-bold group-hover:scale-110 transition-transform">
-                    {member.name.split(' ').map(n => n[0]).join('')}
+                  <div className="w-24 h-24 mx-auto mb-4 rounded-2xl overflow-hidden group-hover:scale-110 transition-transform">
+                    <img 
+                      src={member.image} 
+                      alt={member.name}
+                      className="w-full h-full object-cover"
+                    />
                   </div>
-                  <h3 className="text-xl font-bold text-center mb-1">{member.name}</h3>
-                  <p className="text-primary text-center font-semibold mb-3">{member.role}</p>
-                  <p className="text-sm text-muted-foreground text-center mb-4 leading-relaxed">
-                    {member.bio}
-                  </p>
+                  <h3 className="text-xl font-bold text-center mb-4">{member.name}</h3>
                   <div className="flex justify-center gap-3">
                     <a 
                       href={member.github} 
