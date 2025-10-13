@@ -84,12 +84,6 @@ const Index = () => {
                 color: "from-accent to-accent/60"
               },
               {
-                icon: MessageCircle,
-                title: "Team Chat",
-                description: "Built-in messaging to coordinate with your team members",
-                color: "from-highlight to-highlight/60"
-              },
-              {
                 icon: Shield,
                 title: "Verified Profiles",
                 description: "Connect with real students through verified university emails",
@@ -117,48 +111,6 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Testimonials */}
-      <section className="py-20 px-6">
-        <div className="container mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold mb-4">What Students Say</h2>
-            <p className="text-xl text-muted-foreground">Real experiences from our community</p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            {[
-              {
-                name: "Priya Sharma",
-                role: "CS Student, Final Year",
-                quote: "Found my hackathon team in under 10 minutes. We went on to win first place!",
-              },
-              {
-                name: "Rahul Verma",
-                role: "AI/ML Enthusiast",
-                quote: "The mentor connect feature helped me find guidance for my research project.",
-              },
-              {
-                name: "Ananya Patel",
-                role: "Web Developer",
-                quote: "Perfect for finding teammates with complementary skills. Love the interface!",
-              }
-            ].map((testimonial, index) => (
-              <Card key={index} className="glass-card p-8 glow-hover">
-                <div className="flex items-center gap-4 mb-4">
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center text-white font-semibold">
-                    {testimonial.name[0]}
-                  </div>
-                  <div>
-                    <div className="font-semibold">{testimonial.name}</div>
-                    <div className="text-sm text-muted-foreground">{testimonial.role}</div>
-                  </div>
-                </div>
-                <p className="text-muted-foreground italic">"{testimonial.quote}"</p>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* CTA Section */}
       <section className="py-20 px-6 relative overflow-hidden">
