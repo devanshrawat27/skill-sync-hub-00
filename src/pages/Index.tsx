@@ -38,8 +38,7 @@ const Index = () => {
                   </Button>
                 </Link>
               </div>
-              
-            
+            </div>
             
             <div className="relative animate-fade-in">
               <div className="absolute inset-0 bg-gradient-to-tr from-primary/20 to-accent/20 rounded-3xl blur-3xl"></div>
