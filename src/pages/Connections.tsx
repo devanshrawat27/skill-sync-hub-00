@@ -7,7 +7,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { UserCheck, UserX, Users, Clock, Check, X } from "lucide-react";
+import { UserCheck, UserX, Users, Clock, Check, X, MessageSquare } from "lucide-react";
 import { toast } from "sonner";
 
 interface Connection {
@@ -223,6 +223,22 @@ const Connections = () => {
                             ))}
                           </div>
                         )}
+                        <div className="flex gap-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => navigate(`/profile?user=${profile?.user_id}`)}
+                          >
+                            View Profile
+                          </Button>
+                          <Button
+                            size="sm"
+                            onClick={() => navigate(`/messages?user=${profile?.user_id}`)}
+                          >
+                            <MessageSquare className="h-4 w-4 mr-2" />
+                            Message
+                          </Button>
+                        </div>
                       </Card>
                     );
                   })
