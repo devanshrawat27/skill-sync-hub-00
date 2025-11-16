@@ -12,12 +12,16 @@ import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { Save, Users } from "lucide-react";
 import SkillsInput from "@/components/SkillsInput";
+import ProfilePhotoManager from "@/components/ProfilePhotoManager";
 
 const Profile = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [connectionsCount, setConnectionsCount] = useState(0);
+  const [userId, setUserId] = useState("");
+  const [profilePhoto, setProfilePhoto] = useState<string | null>(null);
+  const [profilePhotoVisible, setProfilePhotoVisible] = useState(true);
   const [profile, setProfile] = useState({
     name: "",
     email: "",
@@ -46,6 +50,8 @@ const Profile = () => {
       return;
     }
 
+    setUserId(session.user.id);
+
     const { data, error } = await supabase
       .from("profiles")
       .select("*")
@@ -68,6 +74,8 @@ const Profile = () => {
     setConnectionsCount(count || 0);
 
     if (data) {
+      setProfilePhoto(data.profile_photo);
+      setProfilePhotoVisible(data.profile_photo_visible ?? true);
       setProfile({
         name: data.name || "",
         email: data.email || "",
@@ -164,6 +172,14 @@ const Profile = () => {
               </Badge>
             </div>
           </div>
+
+          <ProfilePhotoManager
+            profilePhoto={profilePhoto}
+            profilePhotoVisible={profilePhotoVisible}
+            userName={profile.name}
+            userId={userId}
+            onPhotoUpdate={loadProfile}
+          />
 
           <Card className="glass-card p-8">
             <div className="space-y-6">
