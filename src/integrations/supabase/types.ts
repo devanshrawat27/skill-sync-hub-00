@@ -101,6 +101,33 @@ export type Database = {
         }
         Relationships: []
       }
+      posts: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          image_url: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           achievements: string[] | null
@@ -119,6 +146,7 @@ export type Database = {
           name: string
           portfolio_url: string | null
           profile_photo: string | null
+          profile_photo_visible: boolean | null
           resume_url: string | null
           skills: string[] | null
           updated_at: string
@@ -142,6 +170,7 @@ export type Database = {
           name: string
           portfolio_url?: string | null
           profile_photo?: string | null
+          profile_photo_visible?: boolean | null
           resume_url?: string | null
           skills?: string[] | null
           updated_at?: string
@@ -165,6 +194,7 @@ export type Database = {
           name?: string
           portfolio_url?: string | null
           profile_photo?: string | null
+          profile_photo_visible?: boolean | null
           resume_url?: string | null
           skills?: string[] | null
           updated_at?: string

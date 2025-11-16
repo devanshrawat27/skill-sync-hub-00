@@ -7,11 +7,14 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { User, Briefcase, Users, Bell } from "lucide-react";
 import { toast } from "sonner";
+import CreatePostDialog from "@/components/CreatePostDialog";
+import PostCard from "@/components/PostCard";
 
 const Dashboard = () => {
   const navigate = useNavigate();
   const [profile, setProfile] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [posts, setPosts] = useState<any[]>([]);
   const [stats, setStats] = useState({
     connections: 0,
     projects: 0,
@@ -73,7 +76,31 @@ const Dashboard = () => {
       notifications: notificationsCount || 0,
     });
 
+    await loadPosts();
+
     setLoading(false);
+  };
+
+  const loadPosts = async () => {
+    const { data, error } = await supabase
+      .from('posts')
+      .select(`
+        *,
+        profiles:user_id (
+          name,
+          profile_photo,
+          profile_photo_visible
+        )
+      `)
+      .order('created_at', { ascending: false })
+      .limit(20);
+
+    if (error) {
+      console.error("Error loading posts:", error);
+      return;
+    }
+
+    setPosts(data || []);
   };
 
   if (loading) {
@@ -143,6 +170,29 @@ const Dashboard = () => {
                 </div>
               </div>
             </Card>
+          </div>
+
+          {/* Create Post Section */}
+          <div className="mb-8">
+            <CreatePostDialog onPostCreated={loadPosts} />
+          </div>
+
+          {/* Posts Feed */}
+          <div className="mb-12">
+            <h2 className="text-2xl font-bold mb-4">Recent Posts</h2>
+            {posts.length === 0 ? (
+              <Card className="glass-card p-8 text-center">
+                <p className="text-muted-foreground">No posts yet. Be the first to share something!</p>
+              </Card>
+            ) : (
+              posts.map((post) => (
+                <PostCard 
+                  key={post.id} 
+                  post={post}
+                  currentUserId={profile?.user_id}
+                />
+              ))
+            )}
           </div>
 
           <div className="grid lg:grid-cols-2 gap-8">

@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Users, Sparkles, LogOut, User } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Users, Sparkles, LogOut, User, MessageSquare } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useEffect, useState } from "react";
 import { User as SupabaseUser } from "@supabase/supabase-js";
@@ -9,18 +10,72 @@ import Notifications from "./Notifications";
 
 const Navbar = () => {
   const [user, setUser] = useState<SupabaseUser | null>(null);
+  const [unreadCount, setUnreadCount] = useState(0);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null);
+      if (session?.user) {
+        loadUnreadCount(session.user.id);
+      }
     });
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null);
+      if (session?.user) {
+        loadUnreadCount(session.user.id);
+      }
     });
 
     return () => subscription.unsubscribe();
   }, []);
+
+  useEffect(() => {
+    if (!user) return;
+
+    // Setup realtime subscription for messages
+    const channel = supabase
+      .channel('messages-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'messages',
+          filter: `receiver_id=eq.${user.id}`
+        },
+        () => {
+          loadUnreadCount(user.id);
+        }
+      )
+      .on(
+        'postgres_changes',
+        {
+          event: 'UPDATE',
+          schema: 'public',
+          table: 'messages',
+          filter: `receiver_id=eq.${user.id}`
+        },
+        () => {
+          loadUnreadCount(user.id);
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [user]);
+
+  const loadUnreadCount = async (userId: string) => {
+    const { count } = await supabase
+      .from('messages')
+      .select('*', { count: 'exact', head: true })
+      .eq('receiver_id', userId)
+      .eq('is_read', false);
+
+    setUnreadCount(count || 0);
+  };
 
   const handleLogout = async () => {
     const { error } = await supabase.auth.signOut();
@@ -59,8 +114,14 @@ const Navbar = () => {
                 <Link to="/connections" className="text-foreground/80 hover:text-primary transition-colors font-medium">
                   Connections
                 </Link>
-                <Link to="/messages" className="text-foreground/80 hover:text-primary transition-colors font-medium">
+                <Link to="/messages" className="relative text-foreground/80 hover:text-primary transition-colors font-medium flex items-center gap-1">
+                  <MessageSquare className="w-4 h-4" />
                   Messages
+                  {unreadCount > 0 && (
+                    <Badge variant="destructive" className="ml-1 px-1.5 min-w-[20px] h-5">
+                      {unreadCount > 99 ? '99+' : unreadCount}
+                    </Badge>
+                  )}
                 </Link>
               </>
             )}
